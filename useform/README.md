@@ -1,11 +1,11 @@
-# @element-plus/useform
+# element-plus-useform
 
 对 element-plus 的表单验证扩展，使表单验证可以不依赖 el-form 与 el-form-item，但又能使用 el-form-item 进行校验状态展示。
 
 ## 安装
 
 ```sh
-npm i @element-plus/useform async-validator
+npm i element-plus-useform async-validator
 ```
 
 ## 使用
@@ -25,7 +25,7 @@ npm i @element-plus/useform async-validator
 </template>
 
 <script setup lang="ts">
-import { useForm, type UseFormRules } from '@element-plus/useform'
+import { useForm, type UseFormRules } from 'element-plus-useform'
 
 interface FormState {
   title?: string

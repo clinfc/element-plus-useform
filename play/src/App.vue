@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { useForm, type UseFormRules } from '@element-plus/useform'
+import { useForm, type UseFormRules } from 'element-plus-useform'
 import { reactive, toRaw } from 'vue'
 
 enum ArticleType {

@@ -1,10 +1,18 @@
 {
-  "name": "@element-plus/useform",
+  "name": "element-plus-useform",
   "description": "element-plus useForm hook，使表单验证脱离组件实例",
   "version": "1.0.0",
   "type": "module",
   "author": "clinfc",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clinfc/element-plus-useform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/clinfc/element-plus-useform/issues"
+  },
+  "homepage": "https://github.com/clinfc/element-plus-useform",
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc"
@@ -16,7 +24,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
-    "@element-plus/useform",
+    "element-plus-useform",
     "element-plus",
     "useForm",
     "vue3",
@@ -42,5 +50,9 @@
   "peerDependencies": {
     "async-validator": "^4.0.0",
     "vue": "^3.2.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

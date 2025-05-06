@@ -1,0 +1,46 @@
+{
+  "name": "@element-plus/useform",
+  "description": "element-plus useForm hook，使表单验证脱离组件实例",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "clinfc",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "files": [
+    "index.ts",
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "@element-plus/useform",
+    "element-plus",
+    "useForm",
+    "vue3",
+    "hook"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "devDependencies": {
+    "async-validator": "^4.0.0",
+    "typescript": "^5.8.3",
+    "vue": "^3.2.0"
+  },
+  "peerDependencies": {
+    "async-validator": "^4.0.0",
+    "vue": "^3.2.0"
+  }
+}

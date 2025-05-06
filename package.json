@@ -1,0 +1,15 @@
+{
+  "name": "element-plus-useform",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "run-p core:dev play:dev",
+    "build": "pnpm --filter useform build",
+    "core:dev": "pnpm --filter useform dev",
+    "play:dev": "pnpm --filter play dev"
+  },
+  "devDependencies": {
+    "npm-run-all2": "^7.0.2"
+  }
+}

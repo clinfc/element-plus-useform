@@ -59,7 +59,7 @@ function onSubmit() {
 ```ts
 
 function useForm<T extends UseFormModel,></T>(
-    modelRef: T|Ref<T>,
+    modelRef: T | Ref<T>,
     rulesRef?: UseFormRules<T> | Ref<UseFormRules<T>> | ComputedRef<UseFormRules<T>> | WritableComputedRef<UseFormRules<T>> | (() => UseFormRules<T>),
     options?: UseFormOptions
 ): UseFormResult<T, M, R>

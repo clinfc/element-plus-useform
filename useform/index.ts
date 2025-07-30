@@ -28,8 +28,8 @@ export interface UseFormModel {
 export type UseFormRuleItemTrigger = 'blur' | 'change'
 
 export interface UseFormRuleItem extends RuleItem {
+  // TODO: trigger
   trigger?: Arrayable<UseFormRuleItemTrigger>
-  deep?: boolean
 }
 
 export type UseFormRules<T extends UseFormModel = UseFormModel> = {
@@ -142,10 +142,10 @@ export function toArray<T>(value?: T | T[], clone?: boolean): T[] {
   return [value]
 }
 
-export function normalizeKey(key: Arrayable<UseFormPropertyKey>): string {
+export function normalizeKey(key: Arrayable<UseFormPropertyKey>, nkc: Record<string | number, string>): string {
   if (typeof key === 'number') return String(key)
   if (Array.isArray(key)) key = key.join('.')
-  return key.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, '')
+  return nkc[key] ?? (nkc[key] = key.replace(/\[(\w+)\]/g, '.$1').replace(/^\./, ''))
 }
 
 export function get(obj: Record<string, any>, key: string): GetResult {
@@ -277,6 +277,8 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
   const initialModel = ref(cloneDeep(toRaw(unref(model)))) as Ref<T>
   const normalizedRules = ref<Record<string, UseFormRuleItem[]>>({})
   const deepRuleKeys = new Map<string, boolean>()
+  /** normalized key cache */
+  const nkc: Record<string | number, string> = {}
   let watchHandles: Record<string, WatchHandle> = {}
 
   const _validateInfos: Record<string, UseFormValidateInfo> = reactive({})
@@ -284,7 +286,7 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
   const validateInfos = new Proxy(_validateInfos, {
     get(target, p, receiver) {
       if (typeof p === 'string' && !p.startsWith('__v_')) {
-        const key = normalizeKey(p)
+        const key = normalizeKey(p, nkc)
         if (!(key in target) && key.includes('.') && options!.deepRule && !deepRuleKeys.has(key)) {
           const deepRules = getRuleByDeepRule(key, normalizedRules.value)
           if (deepRules.length) {
@@ -332,7 +334,7 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
 
   function obtainValidateFields(props?: Arrayable<UseFormItemPropertyKey>) {
     const nr = unref(normalizedRules)
-    const fileds = toArray(props, true).map((key) => normalizeKey(key))
+    const fileds = toArray(props, true).map((key) => normalizeKey(key, nkc))
     if (fileds.length) return fileds.filter((key) => key in nr)
     const keys = Object.keys(nr)
     return options!.deepRule ? keys.filter((key) => !deepRuleKeys.has(key)) : keys
@@ -442,6 +444,11 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
     fields.forEach((key) => {
       setValidateInfo(key, { validateStatus: '', error: undefined })
     })
+    deepRuleKeys.forEach((valid, key) => {
+      if (valid && fields.some((f) => key.startsWith(f) && key !== f)) {
+        setValidateInfo(key, { validateStatus: '', error: undefined })
+      }
+    })
   }
 
   function clearDeepInfo(key: string, strick?: boolean) {
@@ -461,7 +468,7 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
     const keys = toArray(props)
     if (keys.length) {
       keys.forEach((key) => {
-        key = normalizeKey(key)
+        key = normalizeKey(key, nkc)
         if (deepRuleKeys.get(key)) {
           clearDeepInfo(key, strick)
         }
@@ -486,16 +493,19 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
     const listenKeys: string[] = []
 
     Object.entries(unref(rules)).forEach(([key, rule]) => {
-      key = normalizeKey(key)
+      key = normalizeKey(key, nkc)
       newRules[key] = toArray(rule as UseFormRuleItem, true)
 
-      setValidateInfo(key, { required: isRequired(newRules[key]) }, true)
+      let isCreate = false
 
       if (key in oldHandles) {
         watchHandles[key] = oldHandles[key]
       } else {
+        isCreate = true
         listenKeys.push(key)
       }
+
+      setValidateInfo(key, { required: isRequired(newRules[key]) }, isCreate)
     })
 
     Object.keys(oldHandles).forEach((key) => {

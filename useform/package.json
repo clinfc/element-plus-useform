@@ -1,7 +1,7 @@
 {
   "name": "element-plus-useform",
   "description": "element-plus useForm hook，使表单验证脱离组件实例",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "author": "clinfc",
   "license": "MIT",

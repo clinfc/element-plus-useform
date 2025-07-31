@@ -523,7 +523,9 @@ export function useForm<T extends UseFormModel, M extends T | Ref<T> = T | Ref<T
     isFirst = false
   }
 
-  watch(rules, updateRules, { immediate: true, deep: true })
+  scope.run(() => {
+    watch(rules, updateRules, { immediate: true, deep: true })
+  })
 
   return { model, rules, initialModel, validateInfos, validateField, validate, resetFields, clearValidate, clearDeepInfos }
 }
